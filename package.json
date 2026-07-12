@@ -1,0 +1,17 @@
+{
+  "name": "transitops",
+  "version": "1.0.0",
+  "description": "A full-stack transport operations platform: vehicle registry, driver management, trip dispatch, maintenance workflow, fuel & expense tracking, dashboard KPIs, and reports — built on PostgreSQL + Express + React + Node (\"PERN\" stack).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^10.0.3"
+  }
+}
