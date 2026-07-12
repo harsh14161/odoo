@@ -3,7 +3,15 @@ require('dotenv').config();
 
 let sequelize;
 
-if (process.env.DATABASE_URL) {
+const dialect = process.env.DB_DIALECT || 'sqlite'; // Default to sqlite if not specified
+
+if (dialect === 'sqlite') {
+  sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: process.env.DB_STORAGE || './database.sqlite',
+    logging: false,
+  });
+} else if (process.env.DATABASE_URL) {
   // Full connection string (e.g. Neon, Supabase, Render, Heroku Postgres).
   // These hosted providers require SSL; rejectUnauthorized:false is standard
   // for Neon's pooled connections since they use a managed cert chain.

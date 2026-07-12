@@ -18,11 +18,11 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/vehicles" element={<ProtectedRoute><Vehicles /></ProtectedRoute>} />
-          <Route path="/drivers" element={<ProtectedRoute><Drivers /></ProtectedRoute>} />
-          <Route path="/trips" element={<ProtectedRoute><Trips /></ProtectedRoute>} />
-          <Route path="/maintenance" element={<ProtectedRoute><Maintenance /></ProtectedRoute>} />
-          <Route path="/fuel-expenses" element={<ProtectedRoute><FuelExpenses /></ProtectedRoute>} />
+          <Route path="/vehicles" element={<ProtectedRoute roles={['fleet_manager']}><Vehicles /></ProtectedRoute>} />
+          <Route path="/drivers" element={<ProtectedRoute roles={['safety_officer']}><Drivers /></ProtectedRoute>} />
+          <Route path="/trips" element={<ProtectedRoute roles={['fleet_manager', 'driver']}><Trips /></ProtectedRoute>} />
+          <Route path="/maintenance" element={<ProtectedRoute roles={['fleet_manager']}><Maintenance /></ProtectedRoute>} />
+          <Route path="/fuel-expenses" element={<ProtectedRoute roles={['financial_analyst']}><FuelExpenses /></ProtectedRoute>} />
           <Route path="/reports" element={<ProtectedRoute roles={['financial_analyst', 'fleet_manager']}><Reports /></ProtectedRoute>} />
         </Routes>
       </div>

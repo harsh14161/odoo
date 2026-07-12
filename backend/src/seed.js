@@ -8,7 +8,8 @@ async function seed() {
   const users = [
     { name: 'Admin', email: 'admin@transitops.com', role: 'admin' },
     { name: 'Fleet Manager', email: 'fleet@transitops.com', role: 'fleet_manager' },
-    { name: 'Driver User', email: 'driver@transitops.com', role: 'driver' },
+    { name: 'Alex Johnson', email: 'driver@transitops.com', role: 'driver' },
+    { name: 'Priya Singh', email: 'driver2@transitops.com', role: 'driver' },
     { name: 'Safety Officer', email: 'safety@transitops.com', role: 'safety_officer' },
     { name: 'Financial Analyst', email: 'finance@transitops.com', role: 'financial_analyst' },
   ];

@@ -47,3 +47,6 @@ temp/
 
 # Uploads (optional)
 uploads/
+
+# Databases
+*.sqlite

@@ -6,6 +6,12 @@ exports.list = async (req, res) => {
     const { status } = req.query;
     const where = {};
     if (status) where.status = status;
+
+    if (req.user && req.user.role === 'driver') {
+      const driver = await Driver.findOne({ where: { name: req.user.name } });
+      where.driverId = driver ? driver.id : -1;
+    }
+
     const trips = await Trip.findAll({
       where,
       include: [{ model: Vehicle, as: 'vehicle' }, { model: Driver, as: 'driver' }],
