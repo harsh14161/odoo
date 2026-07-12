@@ -14,6 +14,9 @@ Trip.belongsTo(Vehicle, { foreignKey: 'vehicleId', as: 'vehicle' });
 Driver.hasMany(Trip, { foreignKey: 'driverId', as: 'trips' });
 Trip.belongsTo(Driver, { foreignKey: 'driverId', as: 'driver' });
 
+User.hasMany(Trip, { foreignKey: 'managerId', as: 'trips' });
+Trip.belongsTo(User, { foreignKey: 'managerId', as: 'manager' });
+
 Vehicle.hasMany(MaintenanceLog, { foreignKey: 'vehicleId', as: 'maintenanceLogs' });
 MaintenanceLog.belongsTo(Vehicle, { foreignKey: 'vehicleId', as: 'vehicle' });
 

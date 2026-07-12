@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { sequelize, User, Vehicle, Driver } = require('./models');
 
 async function seed() {
-  await sequelize.sync();
+  await sequelize.sync({ force: true });
 
   const users = [
     { name: 'Admin', email: 'admin@transitops.com', role: 'admin' },
@@ -35,8 +35,8 @@ async function seed() {
   const driverCount = await Driver.count();
   if (driverCount === 0) {
     await Driver.bulkCreate([
-      { name: 'Alex Johnson', licenseNumber: 'LIC-1001', licenseCategory: 'B', licenseExpiry: '2027-12-31', contactNumber: '555-0101', safetyScore: 95, status: 'Available' },
-      { name: 'Priya Singh', licenseNumber: 'LIC-1002', licenseCategory: 'C', licenseExpiry: '2026-06-30', contactNumber: '555-0102', safetyScore: 88, status: 'Available' },
+      { name: 'Alex Johnson', email: 'driver@transitops.com', licenseNumber: 'LIC-1001', licenseCategory: 'B', licenseExpiry: '2027-12-31', contactNumber: '555-0101', safetyScore: 95, status: 'Available' },
+      { name: 'Priya Singh', email: 'driver2@transitops.com', licenseNumber: 'LIC-1002', licenseCategory: 'C', licenseExpiry: '2026-06-30', contactNumber: '555-0102', safetyScore: 88, status: 'Available' },
     ]);
     console.log('Seeded sample drivers.');
   }

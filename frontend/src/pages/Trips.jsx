@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 
-const empty = { source: '', destination: '', vehicleId: '', driverId: '', cargoWeight: '', plannedDistance: '', revenue: '' };
+const empty = { source: '', destination: '', vehicleId: '', driverId: '', managerId: '', cargoWeight: '', plannedDistance: '', revenue: '' };
 
 export default function Trips() {
+  const { user } = useAuth();
   const [trips, setTrips] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
+  const [managers, setManagers] = useState([]);
   const [form, setForm] = useState(empty);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -15,20 +18,31 @@ export default function Trips() {
 
   const load = async () => {
     try {
-      const [tripsRes, vehiclesRes, driversRes] = await Promise.all([
+      const promises = [
         api.get('/trips'),
         api.get('/vehicles/available'),
         api.get('/drivers/available'),
-      ]);
-      setTrips(tripsRes.data);
-      setVehicles(vehiclesRes.data);
-      setDrivers(driversRes.data);
+      ];
+      if (user && user.role === 'admin') {
+        promises.push(api.get('/auth/managers'));
+      }
+      const results = await Promise.all(promises);
+      setTrips(results[0].data);
+      setVehicles(results[1].data);
+      setDrivers(results[2].data);
+      if (user && user.role === 'admin' && results[3]) {
+        setManagers(results[3].data);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load data');
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    if (user) {
+      load();
+    }
+  }, [user]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -38,6 +52,7 @@ export default function Trips() {
         ...form,
         vehicleId: Number(form.vehicleId),
         driverId: Number(form.driverId),
+        managerId: form.managerId ? Number(form.managerId) : undefined,
         cargoWeight: Number(form.cargoWeight),
         plannedDistance: Number(form.plannedDistance),
         revenue: Number(form.revenue) || 0,
@@ -123,6 +138,14 @@ export default function Trips() {
               {drivers.map((d) => <option key={d.id} value={d.id}>{d.name} ({d.licenseCategory})</option>)}
             </select>
           </div>
+          {user && user.role === 'admin' && (
+            <div className="field"><label>Fleet Manager (Assignee)</label>
+              <select required value={form.managerId} onChange={(e) => setForm({ ...form, managerId: e.target.value })}>
+                <option value="">Select manager</option>
+                {managers.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.email})</option>)}
+              </select>
+            </div>
+          )}
           <div className="field"><label>Cargo Weight (kg)</label>
             <input required type="number" value={form.cargoWeight} onChange={(e) => setForm({ ...form, cargoWeight: e.target.value })} />
           </div>
@@ -159,7 +182,7 @@ export default function Trips() {
         <table>
           <thead>
             <tr>
-              <th>ID</th><th>Route</th><th>Vehicle</th><th>Driver</th><th>Cargo (kg)</th><th>Distance</th><th>Status</th><th>Actions</th>
+              <th>ID</th><th>Route</th><th>Vehicle</th><th>Driver</th><th>Manager</th><th>Cargo (kg)</th><th>Distance</th><th>Status</th><th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -169,6 +192,7 @@ export default function Trips() {
                 <td>{t.source} → {t.destination}</td>
                 <td>{t.vehicle?.registrationNumber || '-'}</td>
                 <td>{t.driver?.name || '-'}</td>
+                <td>{t.manager?.name || '-'}</td>
                 <td>{t.cargoWeight}</td>
                 <td>{t.actualDistance ?? t.plannedDistance} km</td>
                 <td><span className={`badge ${t.status}`}>{t.status}</span></td>

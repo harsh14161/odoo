@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
-const empty = { name: '', licenseNumber: '', licenseCategory: 'B', licenseExpiry: '', contactNumber: '', safetyScore: 100 };
+const empty = { name: '', email: '', password: '', licenseNumber: '', licenseCategory: 'B', licenseExpiry: '', contactNumber: '', safetyScore: 100 };
 
 export default function Drivers() {
   const { user } = useAuth();
@@ -50,13 +50,13 @@ export default function Drivers() {
   const handleEdit = (d) => {
     setEditingId(d.id);
     setForm({
-      name: d.name, licenseNumber: d.licenseNumber, licenseCategory: d.licenseCategory,
+      name: d.name, email: d.email, password: '', licenseNumber: d.licenseNumber, licenseCategory: d.licenseCategory,
       licenseExpiry: d.licenseExpiry, contactNumber: d.contactNumber || '', safetyScore: d.safetyScore,
     });
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this driver?')) return;
+    if (!window.confirm('Delete this driver? This will also delete their login credentials.')) return;
     try {
       await api.delete(`/drivers/${id}`);
       load();
@@ -87,6 +87,16 @@ export default function Drivers() {
             <div className="field"><label>Name</label>
               <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
             </div>
+            {!editingId && (
+              <>
+                <div className="field"><label>Email</label>
+                  <input required type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                </div>
+                <div className="field"><label>Password</label>
+                  <input type="password" placeholder="Password123!" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                </div>
+              </>
+            )}
             <div className="field"><label>License Number</label>
               <input required value={form.licenseNumber} onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })} />
             </div>
@@ -114,13 +124,14 @@ export default function Drivers() {
         <table>
           <thead>
             <tr>
-              <th>Name</th><th>License No.</th><th>Category</th><th>Expiry</th><th>Safety Score</th><th>Status</th>{canManage && <th>Actions</th>}
+              <th>Name</th><th>Email</th><th>License No.</th><th>Category</th><th>Expiry</th><th>Safety Score</th><th>Status</th>{canManage && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {drivers.map((d) => (
               <tr key={d.id}>
                 <td>{d.name}</td>
+                <td>{d.email}</td>
                 <td>{d.licenseNumber}</td>
                 <td>{d.licenseCategory}</td>
                 <td style={{ color: isExpired(d) ? '#c0392b' : 'inherit', fontWeight: isExpired(d) ? 600 : 400 }}>

@@ -8,7 +8,7 @@ async function start() {
   try {
     await sequelize.authenticate();
     console.log('Database connection established.');
-    await sequelize.sync(); // creates tables if they don't exist
+    await sequelize.sync({ alter: true }); // creates/updates tables if they don't exist or changed
     console.log('Models synchronized.');
     app.listen(PORT, () => console.log(`TransitOps API listening on port ${PORT}`));
   } catch (err) {

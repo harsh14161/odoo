@@ -118,10 +118,92 @@ button.small.success { color: var(--success); border-color: var(--success); }
 .login-wrapper {
   display: flex; align-items: center; justify-content: center; min-height: 80vh;
 }
-.login-card { width: 380px; }
+.login-card {
+  width: 440px;
+  transition: all 0.3s ease;
+}
 .login-card input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 6px; }
 .login-card button { width: 100%; }
 .demo-accounts { font-size: 0.78rem; color: var(--muted); margin-top: 14px; line-height: 1.5; }
+
+.position-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.position-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: var(--card-bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+}
+
+.position-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(31, 111, 235, 0.1);
+}
+
+.position-icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.position-title {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.position-subtitle {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.login-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  transition: color 0.2s;
+}
+
+.login-back-btn:hover {
+  color: var(--primary);
+}
+
+.selected-position-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.selected-position-badge span {
+  font-weight: 600;
+  color: var(--primary);
+}
 
 .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
 .tabs button { border: 1px solid var(--border); background: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; }

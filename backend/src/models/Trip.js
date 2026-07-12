@@ -7,6 +7,7 @@ const Trip = sequelize.define('Trip', {
   destination: { type: DataTypes.STRING, allowNull: false },
   vehicleId: { type: DataTypes.INTEGER, allowNull: false },
   driverId: { type: DataTypes.INTEGER, allowNull: false },
+  managerId: { type: DataTypes.INTEGER, allowNull: true },
   cargoWeight: { type: DataTypes.FLOAT, allowNull: false },
   plannedDistance: { type: DataTypes.FLOAT, allowNull: false },
   actualDistance: { type: DataTypes.FLOAT, allowNull: true },

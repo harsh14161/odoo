@@ -8,13 +8,19 @@ exports.list = async (req, res) => {
     if (status) where.status = status;
 
     if (req.user && req.user.role === 'driver') {
-      const driver = await Driver.findOne({ where: { name: req.user.name } });
+      const driver = await Driver.findOne({ where: { email: req.user.email } });
       where.driverId = driver ? driver.id : -1;
+    } else if (req.user && req.user.role === 'fleet_manager') {
+      where.managerId = req.user.id;
     }
 
     const trips = await Trip.findAll({
       where,
-      include: [{ model: Vehicle, as: 'vehicle' }, { model: Driver, as: 'driver' }],
+      include: [
+        { model: Vehicle, as: 'vehicle' },
+        { model: Driver, as: 'driver' },
+        { model: User, as: 'manager', attributes: ['id', 'name', 'email'] }
+      ],
       order: [['id', 'DESC']],
     });
     res.json(trips);
@@ -26,7 +32,11 @@ exports.list = async (req, res) => {
 exports.getOne = async (req, res) => {
   try {
     const trip = await Trip.findByPk(req.params.id, {
-      include: [{ model: Vehicle, as: 'vehicle' }, { model: Driver, as: 'driver' }],
+      include: [
+        { model: Vehicle, as: 'vehicle' },
+        { model: Driver, as: 'driver' },
+        { model: User, as: 'manager', attributes: ['id', 'name', 'email'] }
+      ],
     });
     if (!trip) return res.status(404).json({ message: 'Trip not found' });
     res.json(trip);
@@ -38,7 +48,7 @@ exports.getOne = async (req, res) => {
 // Create a trip in Draft status. Basic validation only (capacity check).
 exports.create = async (req, res) => {
   try {
-    const { source, destination, vehicleId, driverId, cargoWeight, plannedDistance, revenue } = req.body;
+    const { source, destination, vehicleId, driverId, managerId, cargoWeight, plannedDistance, revenue } = req.body;
     if (!source || !destination || !vehicleId || !driverId || cargoWeight == null || plannedDistance == null) {
       return res.status(400).json({ message: 'source, destination, vehicleId, driverId, cargoWeight and plannedDistance are required' });
     }
@@ -52,8 +62,15 @@ exports.create = async (req, res) => {
       return res.status(400).json({ message: `Cargo weight (${cargoWeight} kg) exceeds vehicle's max load capacity (${vehicle.maxLoadCapacity} kg)` });
     }
 
+    let finalManagerId = null;
+    if (req.user && req.user.role === 'fleet_manager') {
+      finalManagerId = req.user.id;
+    } else if (req.user && req.user.role === 'admin') {
+      finalManagerId = managerId || null;
+    }
+
     const trip = await Trip.create({
-      source, destination, vehicleId, driverId, cargoWeight, plannedDistance,
+      source, destination, vehicleId, driverId, managerId: finalManagerId, cargoWeight, plannedDistance,
       revenue: revenue || 0, status: 'Draft',
     });
     res.status(201).json(trip);

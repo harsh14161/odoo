@@ -1,5 +1,6 @@
-const { Driver, Trip } = require('../models');
+const { Driver, Trip, User } = require('../models');
 const { Op } = require('sequelize');
+const bcrypt = require('bcryptjs');
 
 exports.list = async (req, res) => {
   try {
@@ -38,17 +39,32 @@ exports.getOne = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { name, licenseNumber, licenseCategory, licenseExpiry, contactNumber, safetyScore, status } = req.body;
-    if (!name || !licenseNumber || !licenseCategory || !licenseExpiry) {
-      return res.status(400).json({ message: 'name, licenseNumber, licenseCategory and licenseExpiry are required' });
+    const { name, email, password, licenseNumber, licenseCategory, licenseExpiry, contactNumber, safetyScore, status } = req.body;
+    if (!name || !email || !licenseNumber || !licenseCategory || !licenseExpiry) {
+      return res.status(400).json({ message: 'name, email, licenseNumber, licenseCategory and licenseExpiry are required' });
     }
-    const existing = await Driver.findOne({ where: { licenseNumber } });
-    if (existing) return res.status(409).json({ message: 'License number must be unique' });
+    const existingDriver = await Driver.findOne({ where: { licenseNumber } });
+    if (existingDriver) return res.status(409).json({ message: 'License number must be unique' });
+
+    const existingEmailDriver = await Driver.findOne({ where: { email } });
+    if (existingEmailDriver) return res.status(409).json({ message: 'Email is already registered for another driver' });
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) return res.status(409).json({ message: 'Email is already taken by another user' });
 
     const driver = await Driver.create({
-      name, licenseNumber, licenseCategory, licenseExpiry,
+      name, email, licenseNumber, licenseCategory, licenseExpiry,
       contactNumber, safetyScore: safetyScore ?? 100, status: status || 'Available',
     });
+
+    const passwordHash = await bcrypt.hash(password || 'Password123!', 10);
+    await User.create({
+      name,
+      email,
+      passwordHash,
+      role: 'driver',
+    });
+
     res.status(201).json(driver);
   } catch (err) {
     res.status(500).json({ message: 'Failed to create driver', error: err.message });
@@ -78,6 +94,8 @@ exports.remove = async (req, res) => {
     if (activeTrips > 0) {
       return res.status(400).json({ message: 'Cannot delete driver with active or draft trips' });
     }
+    // Delete the driver user account
+    await User.destroy({ where: { email: driver.email } });
     await driver.destroy();
     res.json({ message: 'Driver deleted' });
   } catch (err) {

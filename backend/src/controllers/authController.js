@@ -59,3 +59,16 @@ exports.login = async (req, res) => {
 exports.me = async (req, res) => {
   res.json({ user: req.user });
 };
+
+exports.listManagers = async (req, res) => {
+  try {
+    const managers = await User.findAll({
+      where: { role: 'fleet_manager' },
+      attributes: ['id', 'name', 'email'],
+      order: [['name', 'ASC']]
+    });
+    res.json(managers);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch managers', error: err.message });
+  }
+};

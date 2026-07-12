@@ -4,6 +4,7 @@ const sequelize = require('../config/db');
 const Driver = sequelize.define('Driver', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
   licenseNumber: { type: DataTypes.STRING, allowNull: false, unique: true },
   licenseCategory: { type: DataTypes.STRING, allowNull: false },
   licenseExpiry: { type: DataTypes.DATEONLY, allowNull: false },

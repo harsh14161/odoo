@@ -20,7 +20,7 @@ export default function Navbar() {
       case '/vehicles':
         return user.role === 'fleet_manager';
       case '/drivers':
-        return user.role === 'safety_officer';
+        return ['safety_officer', 'fleet_manager'].includes(user.role);
       case '/trips':
         return ['fleet_manager', 'driver'].includes(user.role);
       case '/maintenance':
