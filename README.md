@@ -6,10 +6,9 @@ and reports — built on **MongoDB + Express + React + Node ("MERN" stack)**.
 
 > Note: the request asked for "MERN using Postgres." MERN's "M" is normally
 > MongoDB, which is a NoSQL document store — it isn't a drop-in replacement
-> target for a relational database. So this app uses PostgreSQL as the
+> target for a relational database. So this app uses MongoDb as the
 > database with Sequelize as the ORM, and Express/React/Node for the rest
-> of the stack (i.e. **MERN**), which is the correct combination for a
-> Postgres-backed app.
+> of the stack (i.e. **MERN**), which is the correct combination for mern.
 
 ## Stack
 
