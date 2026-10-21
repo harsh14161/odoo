@@ -2,18 +2,18 @@
 
 A full-stack transport operations platform: vehicle registry, driver management,
 trip dispatch, maintenance workflow, fuel & expense tracking, dashboard KPIs,
-and reports — built on **PostgreSQL + Express + React + Node ("PERN" stack)**.
+and reports — built on **MongoDB + Express + React + Node ("PERN" stack)**.
 
 > Note: the request asked for "MERN using Postgres." MERN's "M" is normally
 > MongoDB, which is a NoSQL document store — it isn't a drop-in replacement
 > target for a relational database. So this app uses PostgreSQL as the
 > database with Sequelize as the ORM, and Express/React/Node for the rest
-> of the stack (i.e. **PERN**), which is the correct combination for a
+> of the stack (i.e. **MERN**), which is the correct combination for a
 > Postgres-backed app.
 
 ## Stack
 
-- **Database:** PostgreSQL
+- **Database:** MongoBD
 - **Backend:** Node.js, Express, Sequelize ORM, JWT auth, bcrypt
 - **Frontend:** React (Vite), React Router, Axios
 - **Auth:** Email/password login, JWT, Role-Based Access Control (RBAC)
@@ -81,7 +81,7 @@ transitops/
 
 ## Setup
 
-### 1. Database (PostgreSQL)
+### 1. Database (MongoDB)
 
 Easiest path — Docker:
 
