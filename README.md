@@ -2,7 +2,7 @@
 
 A full-stack transport operations platform: vehicle registry, driver management,
 trip dispatch, maintenance workflow, fuel & expense tracking, dashboard KPIs,
-and reports — built on **MongoDB + Express + React + Node ("PERN" stack)**.
+and reports — built on **MongoDB + Express + React + Node ("MERN" stack)**.
 
 > Note: the request asked for "MERN using Postgres." MERN's "M" is normally
 > MongoDB, which is a NoSQL document store — it isn't a drop-in replacement
@@ -14,7 +14,7 @@ and reports — built on **MongoDB + Express + React + Node ("PERN" stack)**.
 ## Stack
 
 - **Database:** MongoBD
-- **Backend:** Node.js, Express, Sequelize ORM, JWT auth, bcrypt
+- **Backend:** Node.js, Express, JWT auth, bcrypt
 - **Frontend:** React (Vite), React Router, Axios
 - **Auth:** Email/password login, JWT, Role-Based Access Control (RBAC)
 
